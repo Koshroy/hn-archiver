@@ -3,32 +3,15 @@
 import aiohttp
 import asyncio
 from collections import deque
+from data import Comment, Story
 from itertools import zip_longest
-from dataclasses import asdict, dataclass
+from dataclasses import asdict
+import pickle
 import ujson
-
-@dataclass
-class Comment:
-    by: str
-    id: int
-    time: int
-    text: str
-    kids: list
-    deleted: bool
-    dead: bool
-
-@dataclass
-class Story:
-    by: str
-    id: int
-    score: int
-    time: int
-    title: str
-    url: str
-    comments: list[Comment]
 
 
 async def main():
+    stories = []
     async with aiohttp.ClientSession() as session:
         story_ids = await fetch_top_story_ids(session)
         coroutines = [fetch_item(story_id, session) for story_id in story_ids]
@@ -37,7 +20,16 @@ async def main():
             kid_ids = raw_story.get('kids', [])
             comment_tree = await parse_comment_tree(kid_ids, session)
             story = parse_raw_story(raw_story, comment_tree)
-            print(ujson.dumps(asdict(story)))
+            stories.append(story)
+
+    try:
+        with open('stories.pickle', 'wb') as f:
+            pickle.dump(stories, f)
+    except Exception as e:
+        print(f'Problem dumping pickle of stories: {e}')
+        print('Dumping stories to JSON')
+        with open('stories.json', 'w') as f:
+            print(ujson.dumps(), file=f)
 
 
 async def parse_comment_tree(top_ids, session):
