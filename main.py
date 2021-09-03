@@ -30,8 +30,7 @@ class Story:
 
 async def main():
     async with aiohttp.ClientSession() as session:
-        story_ids = list(set(await fetch_top_story_ids(session)))
-        # story_ids = story_ids[0:3] if len(story_ids) >= 3 else story_ids
+        story_ids = await fetch_top_story_ids(session)
         coroutines = [fetch_item(story_id, session) for story_id in story_ids]
         top = await asyncio.gather(*coroutines)
         for raw_story in top:
