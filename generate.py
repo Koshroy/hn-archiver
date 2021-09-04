@@ -70,9 +70,10 @@ def print_comment_tree(fname, story):
                 else:
                     print('<li>', file=f)
                 last_depth = depth
+                skull = '☠' if comment.dead else ''
                 print(f'<div class="comment" id="comment-{comment.id}">', file=f)
                 print('<details open="true">', file=f)
-                print(f'<summary><b>{comment.by}:</b></summary>', file=f)
+                print(f'<summary><b>{comment.by} {skull}:</b></summary>', file=f)
                 print(f'<p>{comment.text}</p>', file=f)
                 print('</details>', file=f)
                 print('</div>', file=f)
