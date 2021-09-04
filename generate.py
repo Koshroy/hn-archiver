@@ -54,7 +54,7 @@ def print_comment_tree(fname, story):
         print('</head>', file=f)
         print('<body>', file=f)
         print('<header>', file=f)
-        print(f'<div class="story" id="story-{story.id}">', file=f)
+        print(f'<div class="story-header" id="story-{story.id}">', file=f)
         print(f'<h1>{story.title}</h1>', file=f)
         print(f'<h3>By: {story.by}</h3>', file=f)
         print(f'<h3>Score: {story.score}</h3>', file=f)
@@ -65,7 +65,7 @@ def print_comment_tree(fname, story):
         print('<ul>', file=f)
 
         for comment_tree in story.comments:
-            last_depth = 1
+            last_depth = 0
             for (depth, comment) in comments_dfs(comment_tree):
                 delta = abs(depth - last_depth)
                 if not comment.by:
@@ -82,9 +82,10 @@ def print_comment_tree(fname, story):
                     print('<li>', file=f)
                 last_depth = depth
                 skull = ' ☠' if comment.dead else ''
+                comment_dt = datetime.utcfromtimestamp(comment.time)
                 print(f'<div class="comment" id="comment-{comment.id}">', file=f)
                 print('<details open="true">', file=f)
-                print(f'<summary><b>{comment.by}{skull}:</b></summary>', file=f)
+                print(f'<summary><b>{comment.by}{skull}</b> <u>{comment_dt}</u></summary>', file=f)
                 print(f'<p>{comment.text}</p>', file=f)
                 print('</details>', file=f)
                 print('</div>', file=f)
@@ -96,7 +97,7 @@ def print_comment_tree(fname, story):
     
 
 def comments_dfs(comment_root):
-    nodes = deque([(1, comment_root)])
+    nodes = deque([(0, comment_root)])
 
     while nodes:
         (depth, comment) = nodes.pop()

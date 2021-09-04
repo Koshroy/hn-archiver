@@ -1,7 +1,8 @@
 body {
     margin-left: 2em;
     margin-right: 2em;
-    background-color: #888;
+    background-color: rgb(130, 130, 130);
+    font-family: sans-serif;
 }
 
 .comment {
@@ -10,6 +11,19 @@ body {
     padding-left: 1em;
 }
 
+.story {
+    border-left: solid;
+}
+
+.story, li {
+    padding-left: 1em;
+}
+
 ul {
     list-style-type: none;
+    padding-left: 1em;
+}
+
+li {
+    padding-left: 0.5em;
 }
