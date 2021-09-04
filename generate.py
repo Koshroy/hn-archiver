@@ -25,6 +25,7 @@ def print_top_page(fname, stories):
     with open(fname, 'w') as f:
         print('<html>', file=f)
         print('<head>', file=f)
+        print('<meta charset="utf-8"/>', file=f)
         print('<title>Hacker News Top Page</title>', file=f)
         print('<link rel="stylesheet" type="text/css" href="../style.css">', file=f)
         print('</head>', file=f)
@@ -44,6 +45,7 @@ def print_comment_tree(fname, story):
         print('<html>', file=f)
         print('<head>', file=f)
         print('<title>Hacker News</title>', file=f)
+        print('<meta charset="utf-8"/>', file=f)
         print('<link rel="stylesheet" type="text/css" href="../style.css">', file=f)
         print('</head>', file=f)
         print('<body>', file=f)
