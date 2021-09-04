@@ -19,4 +19,5 @@ class Story:
     time: int
     title: str
     url: str
+    num_comments: int
     comments: list[Comment]

@@ -33,7 +33,7 @@ def print_top_page(fname, stories):
         for story in stories:
             print(f'<li><div class="story" id="story-{story.id}">', file=f)
             print(f'<h2><a href="story-{story.id}.html">{story.title} - {story.score}</a></h2>', file=f)
-            print(f'<h3>By: {story.by} at {story.time}</h2>', file=f)
+            print(f'<h3>By: {story.by} at {story.time} - {story.num_comments} comments</h3>', file=f)
             print('</div></li>', file=f)
         print('</ul>', file=f)
         print('</body></html>', file=f)

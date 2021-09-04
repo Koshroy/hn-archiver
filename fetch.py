@@ -74,6 +74,7 @@ def parse_raw_story(raw_story, comments):
         time=raw_story['time'],
         title=raw_story['title'],
         url=raw_story.get('url', ''),
+        num_comments=int(raw_story.get('descendants', 0)),
         comments=comments,
     )
 
