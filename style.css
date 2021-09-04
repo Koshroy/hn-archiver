@@ -1,5 +1,13 @@
+body {
+    margin-left: 2em;
+    margin-right: 2em;
+    background-color: #888;
+}
+
 .comment {
     margin-left: 1em;
+    border-left: solid;
+    padding-left: 1em;
 }
 
 ul {

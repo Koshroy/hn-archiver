@@ -1,6 +1,7 @@
 import argparse
 from collections import deque
 from data import Comment, Story
+from datetime import datetime
 import pickle
 
 
@@ -32,42 +33,50 @@ def print_top_page(fname, stories):
         print('<body>', file=f)
         print('<ul>', file=f)
         for story in stories:
+            story_dt = datetime.utcfromtimestamp(story.time)
             print(f'<li><div class="story" id="story-{story.id}">', file=f)
-            print(f'<h2><a href="story-{story.id}.html">{story.title} - {story.score}</a></h2>', file=f)
-            print(f'<h3>By: {story.by} at {story.time} - {story.num_comments} comments</h3>', file=f)
+            print(f'<h2><a href="story-{story.id}.html">{story.title} - [{story.score}]</a></h2>', file=f)
+            print(f'<h3>By: {story.by} at {story_dt} - {story.num_comments} comments</h3>', file=f)
             print('</div></li>', file=f)
         print('</ul>', file=f)
         print('</body></html>', file=f)
 
 
 def print_comment_tree(fname, story):
+    story_dt = datetime.utcfromtimestamp(story.time)
+    
     with open(fname, 'w') as f:
         print('<html>', file=f)
         print('<head>', file=f)
-        print('<title>Hacker News</title>', file=f)
+        print(f'<title>{story.title}</title>', file=f)
         print('<meta charset="utf-8"/>', file=f)
         print('<link rel="stylesheet" type="text/css" href="../style.css">', file=f)
         print('</head>', file=f)
         print('<body>', file=f)
+        print('<header>', file=f)
         print(f'<div class="story" id="story-{story.id}">', file=f)
-        print(f'<h2>{story.title}</h2>', file=f)
-        print(f'<h3>{story.by} - {story.score}</h3>', file=f)
+        print(f'<h1>{story.title}</h1>', file=f)
+        print(f'<h3>By: {story.by}</h3>', file=f)
+        print(f'<h3>Score: {story.score}</h3>', file=f)
+        print(f'<h3>Posted at: {story_dt}</h3>', file=f)
         print(f'<a href="{story.url}">{story.url}</a>', file=f)
+        print('</header>', file=f)
+        print('<hr>', file=f)
         print('<ul>', file=f)
 
         for comment_tree in story.comments:
             last_depth = 1
             for (depth, comment) in comments_dfs(comment_tree):
-                delta = depth - last_depth
+                delta = abs(depth - last_depth)
                 if not comment.by:
                     continue
                 if depth > last_depth:
                     print('<li>', file=f)
                     for i in range(delta):
-                        print('<ul>', file=f)
+                        print('<ul><li>', file=f)
                 elif depth < last_depth:
                     for i in range(delta):
-                        print('</ul>', file=f)
+                        print('</ul></li>', file=f)
                     print('<li>', file=f)
                 else:
                     print('<li>', file=f)
@@ -81,7 +90,6 @@ def print_comment_tree(fname, story):
                 print('</div>', file=f)
                 print('</li>', file=f)
         print('</ul>', file=f)
-        print('</div>', file=f)
 
         print('</body>', file=f)
         print('</html>', file=f)
