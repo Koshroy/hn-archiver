@@ -9,16 +9,23 @@ def main():
     parser = argparse.ArgumentParser(description='Generate HTML from a dump of HackerNews')
     parser.add_argument('dump_file', metavar='dump_file', type=str, help='dump filename')
     parser.add_argument('output_dir', metavar='output_dir', type=str, help='output directory')
+    parser.add_argument(
+        '--num-posts', metavar='num_posts', type=int,
+        help='# of posts to render',
+        required=False,
+    )
 
     args = parser.parse_args()
     dump_fname = args.dump_file
     output_dir = args.output_dir
+    num_posts = args.num_posts
 
     with open(dump_fname, 'rb') as f:
         stories = pickle.load(f)
 
-    print_top_page(f'{output_dir}/top.html', stories)
-    for story in stories:
+    chosen_stories = stories[0:num_posts] if num_posts else stories
+    print_top_page(f'{output_dir}/top.html', chosen_stories)
+    for story in chosen_stories:
         print_comment_tree(f'{output_dir}/story-{story.id}.html', story)
 
 
@@ -27,10 +34,13 @@ def print_top_page(fname, stories):
         print('<html>', file=f)
         print('<head>', file=f)
         print('<meta charset="utf-8"/>', file=f)
-        print('<title>Hacker News Top Page</title>', file=f)
+        print('<title>Hacker News Archived Top Page</title>', file=f)
         print('<link rel="stylesheet" type="text/css" href="../style.css">', file=f)
         print('</head>', file=f)
         print('<body>', file=f)
+        print('<h1>Hacker News Top Stories</h1>', file=f)
+        print(f'<h2>Last generated at: {datetime.now()}</h2>', file=f)
+        print('<hr>', file=f)
         print('<ul>', file=f)
         for story in stories:
             story_dt = datetime.utcfromtimestamp(story.time)
@@ -100,7 +110,7 @@ def comments_dfs(comment_root):
     nodes = deque([(0, comment_root)])
 
     while nodes:
-        (depth, comment) = nodes.pop()
+        (depth, comment) = nodes.popleft()
         yield (depth, comment)
         for kid in comment.kids:
             nodes.append((depth + 1, kid))

@@ -11,7 +11,7 @@ import pickle
 import ujson
 
 
-async def main():
+async def main_loop(dump_fname):
     stories = []
     async with aiohttp.ClientSession() as session:
         story_ids = await fetch_top_story_ids(session)
@@ -102,10 +102,14 @@ async def fetch_item(item_id, session):
         return await response.json()
 
 
-parser = argparse.ArgumentParser(description='Fetch all HackerNews posts')
-parser.add_argument('dump_file', metavar='dump_file', type=str, help='dump filename')
-args = parser.parse_args()
-dump_fname = args.dump_file
+def main():
+    parser = argparse.ArgumentParser(description='Fetch all HackerNews posts')
+    parser.add_argument('dump_file', metavar='dump_file', type=str, help='dump filename')
+    args = parser.parse_args()
+    dump_fname = args.dump_file
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(main())
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main_loop(dump_fname))
+
+
+main()
