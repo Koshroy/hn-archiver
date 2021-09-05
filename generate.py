@@ -7,8 +7,8 @@ import pickle
 
 def main():
     parser = argparse.ArgumentParser(description='Generate HTML from a dump of HackerNews')
-    parser.add_argument('dump_file', metavar='dump_file', type=str, help='dump filename')
-    parser.add_argument('output_dir', metavar='output_dir', type=str, help='output directory')
+    parser.add_argument('--dump-file', metavar='dump_file', type=str, help='dump filename')
+    parser.add_argument('--output-dir', metavar='output_dir', type=str, help='output directory')
     parser.add_argument(
         '--num-posts', metavar='num_posts', type=int,
         help='# of posts to render',

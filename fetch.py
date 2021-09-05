@@ -12,16 +12,14 @@ import ujson
 
 
 async def main_loop(dump_fname):
-    stories = []
     async with aiohttp.ClientSession() as session:
         story_ids = await fetch_top_story_ids(session)
-        coroutines = [fetch_item(story_id, session) for story_id in story_ids]
-        top = await asyncio.gather(*coroutines)
-        for raw_story in top:
-            kid_ids = raw_story.get('kids', [])
-            comment_tree = await parse_comment_tree(kid_ids, session)
-            story = parse_raw_story(raw_story, comment_tree)
-            stories.append(story)
+        top = await asyncio.gather(
+            *[fetch_item(story_id, session) for story_id in story_ids],
+        )
+        stories = await asyncio.gather(
+            *[parse_story(raw_story, session) for raw_story in top],
+        )
 
     try:
         with open(dump_fname, 'wb') as f:
@@ -31,6 +29,12 @@ async def main_loop(dump_fname):
         print('Dumping stories to JSON')
         with open('stories.json', 'w') as f:
             print(ujson.dumps(), file=f)
+
+
+async def parse_story(raw_story, session):
+        kid_ids = raw_story.get('kids', [])
+        comment_tree = await parse_comment_tree(kid_ids, session)
+        return parse_raw_story(raw_story, comment_tree)
 
 
 async def parse_comment_tree(top_ids, session):
@@ -104,7 +108,7 @@ async def fetch_item(item_id, session):
 
 def main():
     parser = argparse.ArgumentParser(description='Fetch all HackerNews posts')
-    parser.add_argument('dump_file', metavar='dump_file', type=str, help='dump filename')
+    parser.add_argument('--dump-file', metavar='dump_file', type=str, help='dump filename')
     args = parser.parse_args()
     dump_fname = args.dump_file
 
