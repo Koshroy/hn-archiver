@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import aiohttp
+import argparse
 import asyncio
 from collections import deque
 from data import Comment, Story
@@ -23,7 +24,7 @@ async def main():
             stories.append(story)
 
     try:
-        with open('stories.pickle', 'wb') as f:
+        with open(dump_fname, 'wb') as f:
             pickle.dump(stories, f)
     except Exception as e:
         print(f'Problem dumping pickle of stories: {e}')
@@ -100,6 +101,11 @@ async def fetch_item(item_id, session):
     async with session.get(url) as response:
         return await response.json()
 
+
+parser = argparse.ArgumentParser(description='Fetch all HackerNews posts')
+parser.add_argument('dump_file', metavar='dump_file', type=str, help='dump filename')
+args = parser.parse_args()
+dump_fname = args.dump_file
 
 loop = asyncio.get_event_loop()
 loop.run_until_complete(main())
