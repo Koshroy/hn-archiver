@@ -110,7 +110,7 @@ def comments_dfs(comment_root):
     nodes = deque([(0, comment_root)])
 
     while nodes:
-        (depth, comment) = nodes.popleft()
+        (depth, comment) = nodes.pop()
         yield (depth, comment)
         for kid in comment.kids:
             nodes.append((depth + 1, kid))
