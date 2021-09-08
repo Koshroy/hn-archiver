@@ -30,7 +30,8 @@ def main():
     outgoing_dir = args.outgoing
 
     dest_node = os.environ['NNCP_SENDER'] if not outgoing_dir else ''
-    nncp_dir = (os.environ.get('NNCP_DIR') + '/') or ''
+    base_nncp_dir = os.environ.get('NNCP_DIR')
+    nncp_dir = base_nncp_dir + '/' if base_nncp_dir else ''
 
     if outgoing_dir:
         num_stories = None
