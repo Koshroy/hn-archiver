@@ -106,14 +106,17 @@ async def fetch_item(item_id, session):
         return await response.json()
 
 
-def main():
-    parser = argparse.ArgumentParser(description='Fetch all HackerNews posts')
-    parser.add_argument('--dump-file', metavar='dump_file', type=str, help='dump filename')
-    args = parser.parse_args()
-    dump_fname = args.dump_file
-
+def fetch(dump_fname):
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main_loop(dump_fname))
 
 
-main()
+def main():
+    parser = argparse.ArgumentParser(description='Fetch all HackerNews posts')
+    parser.add_argument('--dump-file', metavar='dump_file', type=str, help='dump filename')
+    args = parser.parse_args()
+    fetch(args.dump_file)
+
+
+if __name__ == '__main__':
+    main()

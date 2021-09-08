@@ -20,6 +20,10 @@ def main():
     output_dir = args.output_dir
     num_posts = args.num_posts
 
+    generate(dump_fname, output_dir, num_posts)
+
+
+def generate(dump_fname, output_dir, num_posts):
     with open(dump_fname, 'rb') as f:
         stories = pickle.load(f)
 
@@ -35,7 +39,7 @@ def print_top_page(fname, stories):
         print('<head>', file=f)
         print('<meta charset="utf-8"/>', file=f)
         print('<title>Hacker News Archived Top Page</title>', file=f)
-        print('<link rel="stylesheet" type="text/css" href="../style.css">', file=f)
+        print('<link rel="stylesheet" type="text/css" href="style.css">', file=f)
         print('</head>', file=f)
         print('<body>', file=f)
         print('<h1>Hacker News Top Stories</h1>', file=f)
@@ -47,6 +51,7 @@ def print_top_page(fname, stories):
             print(f'<li><div class="story" id="story-{story.id}">', file=f)
             print(f'<h2><a href="story-{story.id}.html">{story.title} - [{story.score}]</a></h2>', file=f)
             print(f'<h3>By: {story.by} at {story_dt} - {story.num_comments} comments</h3>', file=f)
+            print(f'<h3><a href="{story.url}">{story.url}</a></h3>', file=f)
             print('</div></li>', file=f)
         print('</ul>', file=f)
         print('</body></html>', file=f)
@@ -60,7 +65,7 @@ def print_comment_tree(fname, story):
         print('<head>', file=f)
         print(f'<title>{story.title}</title>', file=f)
         print('<meta charset="utf-8"/>', file=f)
-        print('<link rel="stylesheet" type="text/css" href="../style.css">', file=f)
+        print('<link rel="stylesheet" type="text/css" href="style.css">', file=f)
         print('</head>', file=f)
         print('<body>', file=f)
         print('<header>', file=f)
@@ -69,7 +74,9 @@ def print_comment_tree(fname, story):
         print(f'<h3>By: {story.by}</h3>', file=f)
         print(f'<h3>Score: {story.score}</h3>', file=f)
         print(f'<h3>Posted at: {story_dt}</h3>', file=f)
-        print(f'<a href="{story.url}">{story.url}</a>', file=f)
+        print(f'<h3># of comments: {story.num_comments}</h3>', file=f)
+        print(f'<p><a href="{story.url}">{story.url}</a></p>', file=f)
+        print(f'<p>{hn_link_markup(story)}</p>', file=f)
         print('</header>', file=f)
         print('<hr>', file=f)
         print('<ul>', file=f)
@@ -93,9 +100,10 @@ def print_comment_tree(fname, story):
                 last_depth = depth
                 skull = ' ☠' if comment.dead else ''
                 comment_dt = datetime.utcfromtimestamp(comment.time)
+                comment_link = hn_link_markup(comment)
                 print(f'<div class="comment" id="comment-{comment.id}">', file=f)
                 print('<details open="true">', file=f)
-                print(f'<summary><b>{comment.by}{skull}</b> <u>{comment_dt}</u></summary>', file=f)
+                print(f'<summary><b>{comment.by}{skull}</b> <u>{comment_dt}</u> {comment_link}</summary>', file=f)
                 print(f'<p>{comment.text}</p>', file=f)
                 print('</details>', file=f)
                 print('</div>', file=f)
@@ -104,7 +112,17 @@ def print_comment_tree(fname, story):
 
         print('</body>', file=f)
         print('</html>', file=f)
-    
+
+
+def hn_link_markup(hn_item):
+    if isinstance(hn_item, Story):
+        return f'<a href="https://news.ycombinator.com/story?id={hn_item.id}">Original Story</a>'
+    elif isinstance(hn_item, Comment):
+        return f'<a href="https://news.ycombinator.com/item?id={hn_item.id}">[➡]</a>'
+    else:
+        raise RuntimeException(
+            'Item has type {typeof(hn_item)} and is not either a Story or Comment type',
+        )
 
 def comments_dfs(comment_root):
     nodes = deque([(0, comment_root)])
@@ -116,4 +134,5 @@ def comments_dfs(comment_root):
             nodes.append((depth + 1, kid))
 
 
-main()
+if __name__ == '__main__':
+    main()
