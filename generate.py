@@ -3,12 +3,14 @@ from collections import deque
 from data import Comment, Story
 from datetime import datetime
 import pickle
+import shutil
 
 
 def main():
     parser = argparse.ArgumentParser(description='Generate HTML from a dump of HackerNews')
     parser.add_argument('--dump-file', metavar='dump_file', type=str, help='dump filename')
     parser.add_argument('--output-dir', metavar='output_dir', type=str, help='output directory')
+    parser.add_argument('--style', metavar='style', type=str, help='base style path')
     parser.add_argument(
         '--num-posts', metavar='num_posts', type=int,
         help='# of posts to render',
@@ -19,13 +21,16 @@ def main():
     dump_fname = args.dump_file
     output_dir = args.output_dir
     num_posts = args.num_posts
+    style = args.style
 
-    generate(dump_fname, output_dir, num_posts)
+    generate(dump_fname, output_dir, style, num_posts)
 
 
-def generate(dump_fname, output_dir, num_posts):
+def generate(dump_fname, output_dir, style, num_posts):
     with open(dump_fname, 'rb') as f:
         stories = pickle.load(f)
+
+    shutil.copy(style, f'{output_dir}/style.css')
 
     chosen_stories = stories[0:num_posts] if num_posts else stories
     print_top_page(f'{output_dir}/top.html', chosen_stories)

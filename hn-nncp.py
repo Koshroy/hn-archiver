@@ -57,7 +57,7 @@ def main():
             fetch(str(dump_path))
 
         print('Generating output')
-        generate(str(dump_path), str(out_dir), num_stories)
+        generate(str(dump_path), str(out_dir), Path(.) / 'style.css', num_stories)
 
         tarpath = tmp_path / 'hackernews.tar.xz'
         print('Creating tarfile')
