@@ -90,9 +90,10 @@ def print_comment_tree(fname, story):
             last_depth = 0
             for (depth, comment) in comments_dfs(comment_tree):
                 delta = abs(depth - last_depth)
-                last_depth = depth
                 if not comment.by:
+                    last_depth = depth
                     continue
+
                 if depth > last_depth:
                     print('<li>', file=f)
                     for i in range(delta):
@@ -103,6 +104,7 @@ def print_comment_tree(fname, story):
                     print('<li>', file=f)
                 else:
                     print('<li>', file=f)
+                last_depth = depth
                 skull = ' ☠' if comment.dead else ''
                 comment_dt = datetime.utcfromtimestamp(comment.time)
                 comment_link = hn_link_markup(comment)
