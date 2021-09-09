@@ -98,7 +98,7 @@ def print_comment_tree(fname, story):
                     for i in range(delta):
                         print('<ul><li>', file=f)
                 elif depth < last_depth:
-                    for i in range(delta):
+                    for i in range(delta + 1):
                         print('</ul></li>', file=f)
                     print('<li>', file=f)
                 else:
