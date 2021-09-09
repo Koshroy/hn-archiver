@@ -114,6 +114,9 @@ def print_comment_tree(fname, story):
                 print('</details>', file=f)
                 print('</div>', file=f)
                 print('</li>', file=f)
+
+            for i in range(last_depth):
+                print('</ul></li>', file=f)
         print('</ul>', file=f)
 
         print('</body>', file=f)
