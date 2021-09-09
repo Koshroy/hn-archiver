@@ -91,7 +91,6 @@ def print_comment_tree(fname, story):
             for (depth, comment) in comments_dfs(comment_tree):
                 delta = abs(depth - last_depth)
                 if not comment.by:
-                    last_depth = depth
                     continue
 
                 if depth > last_depth:
