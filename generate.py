@@ -121,10 +121,11 @@ def print_comment_tree(fname, story):
 
 
 def hn_link_markup(hn_item):
+    href = f"https://news.ycombinator.com/item?id={hn_item.id}"
     if isinstance(hn_item, Story):
-        return f'<a href="https://news.ycombinator.com/story?id={hn_item.id}">Original Story</a>'
+        return f'<a href="{href}">Original Story</a>'
     elif isinstance(hn_item, Comment):
-        return f'<a href="https://news.ycombinator.com/item?id={hn_item.id}">[➡]</a>'
+        return f'<a href="{href}">[➡]</a>'
     else:
         raise RuntimeException(
             'Item has type {typeof(hn_item)} and is not either a Story or Comment type',
