@@ -19,6 +19,14 @@ body {
     padding-left: 1em;
 }
 
+.story-score {
+    color: rgb(0, 100, 0);
+}
+
+.story-comments {
+    color: rgb(100, 0, 0);
+}
+
 ul {
     list-style-type: none;
     padding-left: 1em;

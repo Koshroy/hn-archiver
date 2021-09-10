@@ -81,6 +81,7 @@ def parse_raw_story(raw_story, comments):
         url=raw_story.get('url', ''),
         num_comments=int(raw_story.get('descendants', 0)),
         comments=comments,
+        text=raw_story.get('text', ''),
     )
 
 def parse_raw_comment(raw_comment):

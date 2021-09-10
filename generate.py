@@ -4,6 +4,10 @@ from data import Comment, Story
 from datetime import datetime
 import pickle
 import shutil
+from zoneinfo import ZoneInfo
+
+
+LA_TZ = ZoneInfo("America/Los_Angeles")
 
 
 def main():
@@ -52,18 +56,22 @@ def print_top_page(fname, stories):
         print('<hr>', file=f)
         print('<ul>', file=f)
         for story in stories:
-            story_dt = datetime.utcfromtimestamp(story.time)
+            story_dt = datetime.utcfromtimestamp(story.time).astimezone(LA_TZ)
             print(f'<li><div class="story" id="story-{story.id}">', file=f)
-            print(f'<h2><a href="story-{story.id}.html">{story.title} - [{story.score}]</a></h2>', file=f)
-            print(f'<h3>By: {story.by} at {story_dt} - {story.num_comments} comments</h3>', file=f)
-            print(f'<h3><a href="{story.url}">{story.url}</a></h3>', file=f)
+            print(f'<h3><a href="story-{story.id}.html">{story.title}</a></h3>', file=f)
+            print(
+                f'<div><span class="story-score">{story.score} points</span> by {story.by}</div>'
+                f'<div><span class="story-comments">{story.num_comments}</span> comments - '
+                f'<a href="{story.url}">Story Link</a></div>',
+                f'{story_dt}',
+                file=f)
             print('</div></li>', file=f)
         print('</ul>', file=f)
         print('</body></html>', file=f)
 
 
 def print_comment_tree(fname, story):
-    story_dt = datetime.utcfromtimestamp(story.time)
+    story_dt = datetime.utcfromtimestamp(story.time).astimezone(LA_TZ)
     
     with open(fname, 'w') as f:
         print('<html>', file=f)
@@ -82,6 +90,8 @@ def print_comment_tree(fname, story):
         print(f'<h3># of comments: {story.num_comments}</h3>', file=f)
         print(f'<p><a href="{story.url}">{story.url}</a></p>', file=f)
         print(f'<p>{hn_link_markup(story)}</p>', file=f)
+        if story.text:
+            print(story.text, file=f)
         print('</header>', file=f)
         print('<hr>', file=f)
         print('<ul>', file=f)
@@ -105,7 +115,7 @@ def print_comment_tree(fname, story):
                     print('<li>', file=f)
                 last_depth = depth
                 skull = ' ☠' if comment.dead else ''
-                comment_dt = datetime.utcfromtimestamp(comment.time)
+                comment_dt = datetime.utcfromtimestamp(comment.time).astimezone(LA_TZ)
                 comment_link = hn_link_markup(comment)
                 print(f'<div class="comment" id="comment-{comment.id}">', file=f)
                 print('<details open="true">', file=f)

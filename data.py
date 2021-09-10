@@ -21,3 +21,4 @@ class Story:
     url: str
     num_comments: int
     comments: list[Comment]
+    text: str
