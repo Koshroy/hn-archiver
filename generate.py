@@ -43,6 +43,8 @@ def generate(dump_fname, output_dir, style, num_posts):
 
 
 def print_top_page(fname, stories):
+    now = datetime.now().astimezone(LA_TZ)
+
     with open(fname, 'w') as f:
         print('<html>', file=f)
         print('<head>', file=f)
@@ -52,7 +54,7 @@ def print_top_page(fname, stories):
         print('</head>', file=f)
         print('<body>', file=f)
         print('<h1>Hacker News Top Stories</h1>', file=f)
-        print(f'<h2>Last generated at: {datetime.now()}</h2>', file=f)
+        print(f'<h2>Last generated at: {now}</h2>', file=f)
         print('<hr>', file=f)
         print('<ul>', file=f)
         for story in stories:
