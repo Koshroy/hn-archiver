@@ -114,7 +114,7 @@ def fetch(dump_fname):
 
 def main():
     parser = argparse.ArgumentParser(description='Fetch all HackerNews posts')
-    parser.add_argument('--dump-file', metavar='dump_file', type=str, help='dump filename')
+    parser.add_argument('dump_file', metavar='dump_file', type=str, help='dump filename')
     args = parser.parse_args()
     fetch(args.dump_file)
 
