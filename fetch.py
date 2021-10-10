@@ -28,7 +28,7 @@ async def main_loop(dump_fname):
         print(f'Problem dumping pickle of stories: {e}')
         print('Dumping stories to JSON')
         with open('stories.json', 'w') as f:
-            print(ujson.dumps(), file=f)
+            print(ujson.dumps(stories), file=f)
 
 
 async def parse_story(raw_story, session):
