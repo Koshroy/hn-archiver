@@ -31,6 +31,7 @@ def main():
 
     dest_node = os.environ['NNCP_SENDER'] if not outgoing_dir else ''
     base_nncp_dir = os.environ.get('NNCP_DIR')
+    style_dir = os.environ['STYLE_DIR']
     nncp_dir = base_nncp_dir + '/' if base_nncp_dir else ''
 
     if outgoing_dir:
@@ -58,7 +59,7 @@ def main():
             fetch(str(dump_path))
 
         print('Generating output')
-        generate(str(dump_path), str(out_dir), Path('.') / 'style.css', num_stories)
+        generate(str(dump_path), str(out_dir), Path(style_dir) / 'style.css', num_stories)
 
         tarpath = tmp_path / 'hackernews.tar.xz'
         print('Creating tarfile')
