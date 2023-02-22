@@ -142,7 +142,7 @@ def hn_link_markup(hn_item):
     elif isinstance(hn_item, Comment):
         return f'<a href="{href}">[➡]</a>'
     else:
-        raise RuntimeException(
+        raise Exception(
             'Item has type {typeof(hn_item)} and is not either a Story or Comment type',
         )
 
