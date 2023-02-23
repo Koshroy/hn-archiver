@@ -7,6 +7,7 @@ from collections import deque
 from data import Comment, Story
 from itertools import zip_longest
 from dataclasses import asdict
+import logging
 import pickle
 import ujson
 
@@ -25,8 +26,8 @@ async def main_loop(dump_fname):
         with open(dump_fname, 'wb') as f:
             pickle.dump(stories, f)
     except Exception as e:
-        print(f'Problem dumping pickle of stories: {e}')
-        print('Dumping stories to JSON')
+        logging.error(f'Problem dumping pickle of stories: {e}')
+        logging.warning('Dumping stories to JSON')
         with open('stories.json', 'w') as f:
             print(ujson.dumps(stories), file=f)
 
@@ -102,6 +103,7 @@ async def fetch_top_story_ids(session):
 
 
 async def fetch_item(item_id, session):
+    logging.debug(f'Fetching item {item_id}')
     url = f'https://hacker-news.firebaseio.com/v0/item/{item_id}.json'
     async with session.get(url) as response:
         return await response.json()
